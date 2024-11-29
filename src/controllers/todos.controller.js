@@ -1,5 +1,7 @@
 const { connectDb } = require("../config/connectDb");
-
+const { Todo } = require("../models/todo.model");
+const jwt = require('jsonwebtoken')
+const SECRET = process.env.JWT_SECRET
 let todos = [
     {
         id: 1,
@@ -18,14 +20,33 @@ const getTodosController = async (request, response) => {
     }
 };
 
-const createTodoController = (request, response) => {
-    const newTodo = {
-        id: Date.now(),
-        ...request.body
-    }
+const createTodoController = async (request, response) => {
+    const { title, description, is_completed } = request.body
+    console.log('User desde Midleware', request.user)
+    const userId = request.user.id
 
-    todos.push(newTodo)
-    response.json(newTodo)
+    try {
+        const newTodo = new Todo({
+            title,
+            description,
+            is_completed,
+            user_id: userId
+        });
+
+        await newTodo.save();
+        
+        response.status(201).json({
+            status: 'OK',
+            message: 'Todo creado correctamente.',
+            data: newTodo
+        })
+    } catch (error) {
+        console.error('Error al crear el todo', error)
+        response.status(500).json({
+            status: 'error',
+            message: 'Error al crear un nuevo todo.'
+        })
+    }
 }
 
 const updateTodoController = (request, response) => {
