@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: . # Directorio actual
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000" # Mapea el puerto del host al contenedor
+    volumes:
+      - .:/app # Monta el código local en el contenedor para desarrollo
+      - /app/node_modules # Excluye node_modules del montaje local
+    environment:
+      - API_PORT=3000
+      - DB_USER=admin
+      - DB_HOST=localhost # Se refiere al servicio de PostgreSQL
+      - DB_NAME=todoList
+      - DB_PASSWORD=secretpassword123
+      - DB_PORT=5432
+      - MONGODB_URI=mongodb://mongo:27017/todo_list # MongoDB desde el contenedor
+      - JWT_SECRET=d940cb132283eaab0164f3f9630960b13739ee980dcfbf7ad2df2be4b4c09765
+
+  mongo:
+    image: mongo:6
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db # Persiste los datos en el disco
+
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: secretpassword123
+      POSTGRES_DB: todoList
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  mongo_data:
+  postgres_data:

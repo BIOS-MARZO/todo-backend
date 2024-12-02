@@ -10,7 +10,7 @@ const getUserByEmail = async (email) => {
 }
 
 const getUsers = async () => {
-    const result = await connectDb.query('SELECT * FROM users');
+    const result = await connectDb.query('SELECT full_name, email FROM users');
     return result.rows;
 }
 

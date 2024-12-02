@@ -5,6 +5,7 @@ const { authRoutes } = require('./routes/auth.routes');
 const { todosRouter } = require('./routes/todos.routes');
 const { verifyToken } = require('./middlewares/auth.middleware');
 const { connectMongoDb } = require('./config/mongoDb');
+const { usersRouter } = require('./routes/users.routes');
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use('/auth', authRoutes)
 app.use(verifyToken)
 
 app.use('/todos', todosRouter)
+app.use('/users', usersRouter)
 
 app.listen(PORT, () => {
   console.log(`Servidor corriendo o escuchando en http://localhost:${PORT}`)

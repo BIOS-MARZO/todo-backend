@@ -10,7 +10,7 @@ const routes = express.Router();
 routes.get('', getTodosController);
 routes.post('', createTodoController);
 routes.put('/:todoId', updateTodoController);
-routes.delete('/:id', deleteTodoController);
+routes.delete('/:todoId', deleteTodoController);
 
 module.exports = {
     todosRouter: routes
