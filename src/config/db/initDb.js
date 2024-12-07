@@ -1,4 +1,4 @@
-const { connectDb } = require("./connectDb");
+const { connectDb } = require("../connectDb");
 
 const createTables = async () => {
     const tableQueries = `

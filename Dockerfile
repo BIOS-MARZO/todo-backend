@@ -1,5 +1,5 @@
 # Use la imagen que vamos a declarar
-FROM node:18
+FROM node:18-alpine
 
 # Establecer el directorio de trabajo intero del contendor
 WORKDIR /app
@@ -14,7 +14,6 @@ RUN npm install
 COPY . .
 
 # Exponer el puerto de la aplicacion
-
 EXPOSE 3000
 
 # Comando para iniciar la aplicacion

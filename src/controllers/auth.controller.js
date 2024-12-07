@@ -2,6 +2,8 @@ const bcrypt = require('bcrypt');
 
 const { getUserByEmail, createUser } = require("../models/user.model");
 const { generateToken } = require('../config/jwt');
+const { transporter } = require('../config/nodemailer');
+const EMAIL_USER_SENDER = process.env.EMAIL_USER_SENDER;
 
 const registerController = async (request, response) => {
     const { fullName, email, password } = request.body;
@@ -20,6 +22,21 @@ const registerController = async (request, response) => {
         const newUser = await createUser(fullName, email, hashedPassword)
 
         const token = generateToken(newUser.id, newUser.email);
+
+        const mailOptions = {
+            from: EMAIL_USER_SENDER,
+            to: email,
+            subject: 'Bienvenido a nuestra plataforma de TODOS',
+            text: `Hola ${fullName}, Gracias por registrarte en nuestra plataforma.`
+        }
+
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.error('Error al enviar el correo', error);
+            } else {
+                console.log('Correo envíando exitosamente', info.response);
+            }
+        })
 
         response.status(201).json({
             status: 'OK',
